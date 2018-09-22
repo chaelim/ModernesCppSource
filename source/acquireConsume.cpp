@@ -5,23 +5,23 @@
 #include <iostream>
 #include <string>
  
-std::atomic<std::string*> ptr;
-int data;
-std::atomic<int> atoData;
+std::atomic<std::string*> g_ptr;
+int g_data;
+std::atomic<int> g_atoData;
  
 void producer(){
     std::string* p  = new std::string("C++11");
-    data = 2011;
-    atoData.store(2014,std::memory_order_relaxed);
-    ptr.store(p, std::memory_order_release);
+    g_data = 2011;
+    g_atoData.store(2014, std::memory_order_relaxed);
+    g_ptr.store(p, std::memory_order_release);
 }
  
 void consumer(){
     std::string* p2;
-    while (!(p2 = ptr.load(std::memory_order_consume)));
+    while (!(p2 = g_ptr.load(std::memory_order_consume)));
     std::cout << "*p2: " << *p2 << std::endl;
-    std::cout << "data: " << data << std::endl;
-    std::cout << "atoData: " << atoData.load(std::memory_order_relaxed) << std::endl;
+    std::cout << "data: " << g_data << std::endl;
+    std::cout << "g_atoData: " << g_atoData.load(std::memory_order_relaxed) << std::endl;
 }
  
 int main(){
